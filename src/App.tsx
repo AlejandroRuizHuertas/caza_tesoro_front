@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Pincha para saber el secreto de la vida
         </a>
       </header>
     </div>
