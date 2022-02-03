@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import Login from './Login';
+import { Games } from './Games';
 
 export const Main = () => {
     return <div>
@@ -19,8 +20,6 @@ export const Main = () => {
             </a>
             <Login />
             <Button href="/games" color='primary'>Ir a juegos</Button>
-
-
         </header>
 
     </div>;
