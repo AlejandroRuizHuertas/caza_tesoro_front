@@ -3,23 +3,27 @@ import logo from './logo.svg';
 import './App.css';
 import Login from './components/Login';
 
+import { Main } from './components/Main';
+import ProtectedRoute from './components/ProtectedRoute';
+import { Games } from './components/Games';
+import { BrowserRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
+
 function App() {
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Hola mundoo
-        </p>
-        <a
-          className="App-link"
-          href="https://www.youtube.com/watch?v=mbeC2w-uIEU"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Pincha para saber el secreto de la vida
-        </a>
-      <Login />
-      </header>
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/games" element={<Games />} />
+        </Routes>
+      </BrowserRouter>
+
+
     </div>
   );
 }

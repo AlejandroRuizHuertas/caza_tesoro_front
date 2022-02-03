@@ -7,11 +7,10 @@ import { getUsuarioSesion, objectUser, User } from "../interfaces/interfaceUser"
 
 
 function Login() {
-    const { getLogin } = useObtener();
+    const { authenticate } = useObtener();
 
     const handleLogin = async (googleData: any) => {
-        await getLogin(googleData);
-
+        await authenticate(googleData);
     }
 
     return (

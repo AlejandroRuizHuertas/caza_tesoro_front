@@ -1,12 +1,8 @@
-// localStorage.setItem(key
-
 import axios from "axios";
-import { useEffect } from "react";
-
 export function useObtener() {
 
     //Función que hace el login y guarda los datos en el sessionStorage
-    const getLogin = async (googleData: any) => {
+    const authenticate = async (googleData: any) => {
         try {
             const servicio: string = '/user';
             const res = await axios.get(process.env.REACT_APP_BACKEND_PATH + servicio, {
@@ -21,14 +17,12 @@ export function useObtener() {
             sessionStorage.setItem("email", res.data.email);
             sessionStorage.setItem("_id", res.data._id);
             sessionStorage.setItem("rol", res.data.rol);
+            sessionStorage.setItem("userToken", googleData.tokenId);
         }
         catch (error) {
             console.log("Error:", error);
         }
     }
-
-
-
-
-    return { getLogin };
+    
+    return { authenticate };
 }
