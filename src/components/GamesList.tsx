@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import { useObtener } from "../hooks/useObtener";
 import { Game } from "../interfaces/interfaceGame";
+import { EnumTipo } from "./EnumJuegos";
 import { GameElement } from "./visuals/GameElement";
 
 
@@ -47,7 +48,7 @@ const GamesList = (): JSX.Element => {
 
                     return (
                         <Grid item key={index} xs={3}>
-                            <GameElement game={game} />
+                            <GameElement game={game} tipo={EnumTipo.PLAY}/>
                         </Grid>
                     )
 
@@ -60,7 +61,7 @@ const GamesList = (): JSX.Element => {
 
                     return (
                         <Grid item key={index} xs={3}>
-                            <GameElement game={game} />
+                            <GameElement game={game} tipo={EnumTipo.PLAY}/>
                         </Grid>
                     )
 

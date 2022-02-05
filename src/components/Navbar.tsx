@@ -42,7 +42,7 @@ export const Navbar = () => {
                     </NavLink>
                     <NavLink
                         className={({ isActive }) => 'nav-item nav-link ' + (isActive ? 'active' : '')}
-                        to="/myGames"
+                        to="/supervise"
                         style={{width:'9em'}}
                     >
                        {usuario.rol == "admin" ? "Todos los juegos": "Mis juegos"}

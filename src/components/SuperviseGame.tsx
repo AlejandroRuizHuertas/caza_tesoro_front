@@ -9,7 +9,7 @@ import { Button, Grid } from "@mui/material";
 import { Treasure } from "../interfaces/interfaceTreasure";
 import { TreasureElement } from "./visuals/TreasureElement";
 
-export const PlayGame = (): JSX.Element => {
+export const SuperviseGame = (): JSX.Element => {
 
   const { gameId } = useParams();
 

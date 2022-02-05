@@ -6,9 +6,10 @@ import React from 'react';
 import { useNavigate } from "react-router";
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
+import { EnumTipo } from "../EnumJuegos";
 
-export const GameElement = (props: { game: any }): JSX.Element => {
-    let { game } = props;
+export const GameElement = (props: { game: any, tipo:string }): JSX.Element => {
+    let { game, tipo } = props;
     
     const navigate = useNavigate();
 
@@ -16,6 +17,7 @@ export const GameElement = (props: { game: any }): JSX.Element => {
 
         navigate(game._id);
     }
+    
 
     return (
         <Box sx={{ minWidth: 275 }}>
@@ -31,12 +33,13 @@ export const GameElement = (props: { game: any }): JSX.Element => {
                         {game.description}
                     </Typography>
                     
-                    {!game.active && <Typography variant="body2">
+                    {!game.active && tipo == EnumTipo.PLAY && <Typography variant="body2">
                         Ganador: {game.winner}
                     </Typography>}
                 </CardContent>
                 <CardActions>
-                    {game.active && <Button variant={"outlined"} onClick={handleClickGame}>Ir al juego</Button>}
+                    {(game.active && tipo == EnumTipo.PLAY) && <Button variant={"outlined"} onClick={handleClickGame}>Ir al juego</Button>}
+                    {(tipo == EnumTipo.SUPERVISE) && <Button variant={"outlined"} onClick={handleClickGame}>Ir al juego</Button>}
                 </CardActions>
             </Card>
         </Box>
