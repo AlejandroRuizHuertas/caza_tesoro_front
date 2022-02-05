@@ -45,3 +45,7 @@ export function isLogged(): boolean {
     const _id = sessionStorage.getItem("_id");
     return _id ? true : false;
 }
+
+export function logout():any {
+    sessionStorage.clear();
+}

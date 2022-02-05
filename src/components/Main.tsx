@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import Login from './Login';
-import { Games } from './Games';
+
 
 export const Main = () => {
     return <div>
