@@ -1,5 +1,5 @@
 import axios from "axios";
-export function useObtener() {
+export function useLogin() {
 
     //Función que hace el login y guarda los datos en el sessionStorage
     const authenticate = async (googleData: any) => {

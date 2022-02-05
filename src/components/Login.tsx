@@ -2,13 +2,13 @@ import axios from "axios";
 import { useState } from "react";
 import GoogleLogin, { GoogleLoginResponse } from "react-google-login";
 import { useNavigate } from "react-router";
-import { useObtener } from "../hooks/useLogin";
+import { useLogin } from "../hooks/useLogin";
 
 import { getUsuarioSesion, objectUser, User } from "../interfaces/interfaceUser";
 
 
 function Login() {
-    const { authenticate } = useObtener();
+    const { authenticate } = useLogin();
     const navigate = useNavigate();
 
     const handleLogin = async (googleData: any) => {

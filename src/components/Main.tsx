@@ -19,7 +19,7 @@ export const Main = () => {
                 Pincha para saber el secreto de la vida
             </a>
             <Login />
-            <Button href="/games" color='primary'>Ir a juegos</Button>
+
         </header>
 
     </div>;

@@ -28,24 +28,24 @@ export const Navbar = () => {
                     <NavLink
                         className={({ isActive }) => 'nav-item nav-link ' + (isActive ? 'active' : '')}
                         to="/games"
-                        style={{width:'10em'}}
+                        style={{width:'9em', marginLeft: 10}}
                     >
-                        Lista de juegos
+                        {usuario.rol == "admin" ? "Juegos activos": "Lista de juegos"}
                     </NavLink>
 
                     <NavLink
                         className={({ isActive }) => 'nav-item nav-link ' + (isActive ? 'active' : '')}
                         to="/create"
-                        style={{width:'10em'}}
+                        style={{width:'9em'}}
                     >
                         Crear juego
                     </NavLink>
                     <NavLink
                         className={({ isActive }) => 'nav-item nav-link ' + (isActive ? 'active' : '')}
                         to="/myGames"
-                        style={{width:'10em'}}
+                        style={{width:'9em'}}
                     >
-                       Mis juegos
+                       {usuario.rol == "admin" ? "Todos los juegos": "Mis juegos"}
                     </NavLink>
 
 
