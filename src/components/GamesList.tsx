@@ -10,14 +10,14 @@ import { GameElement } from "./visuals/GameElement";
 
 const GamesList = (): JSX.Element => {
 
-
     const { getGames, getUsername } = useObtener();
 
     const [juegosActivos, setJuegosActivos] = useState<Game[]>([]);
     const [juegosInactivos, setJuegosInactivos] = useState<Game[]>([]);
 
 
-    const obtenerJuegos = async () => {
+    const obtenerJuegos = async () => 
+    {
         const juegos: any = await getGames();
         //Establezco como activos los juegos activos
         setJuegosActivos(juegos.filter((juego: Game) => juego.active));
@@ -29,7 +29,7 @@ const GamesList = (): JSX.Element => {
             const username: string = await getUsername(juego.winner as string);
             juegosCompletos.push({ ...juego, winner: username })
         }
-        setJuegosInactivos(juegosCompletos)
+        setJuegosInactivos(juegosCompletos);
     }
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const GamesList = (): JSX.Element => {
 
             <h2 style={{ marginTop: 10, marginBottom: 10 }}>Juegos terminados</h2>
             <Grid container spacing={2}>
-                {juegosActivos.length && juegosInactivos.map((game: any, index: number) => {
+                {juegosInactivos.length && juegosInactivos.map((game: any, index: number) => {
 
                     return (
                         <Grid item key={index} xs={3}>

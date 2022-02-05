@@ -1,7 +1,7 @@
 import { height } from "@mui/system";
 import { LatLngExpression } from "leaflet";
 import React, { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import { useParams } from "react-router";
 import { useObtener } from "../hooks/useObtener";
 import { Game } from "../interfaces/interfaceGame";
@@ -31,7 +31,7 @@ export const PlayGame = (): JSX.Element => {
     minLong: 37.6173,
     maxLong: 139.6917
   };
-
+console.log(game);
   const centerLat = (data.minLat + data.maxLat) / 2;
   var distanceLat = data.maxLat - data.minLat;
   var bufferLat = distanceLat * 0.05;
@@ -43,6 +43,19 @@ export const PlayGame = (): JSX.Element => {
     { position: [22.583261, 88.412796], text: "A" },
     { position: [22.58289, 88.41366], text: "B" }
   ];
+
+  function MyComponent() {
+    const map = useMapEvents({
+      click: (e) => {
+        console.log(e);
+      },
+      locationfound: (location) => {
+       
+      },
+    })
+    return null
+  }
+
   return (
     <>
 
@@ -59,7 +72,9 @@ export const PlayGame = (): JSX.Element => {
             [data.maxLat + bufferLat, data.maxLong + bufferLong],
           ]}
           scrollWheelZoom={true}
+          
         >
+          <MyComponent/>
           <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         </MapContainer>
