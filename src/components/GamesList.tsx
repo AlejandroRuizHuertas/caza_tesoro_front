@@ -44,7 +44,7 @@ const GamesList = (): JSX.Element => {
             <h2 style={{ marginTop: 10, marginBottom: 10 }}>Juegos activos</h2>
 
             <Grid container spacing={2}>
-                {juegosActivos.length && juegosActivos.map((game: any, index: number) => {
+                {juegosActivos.map((game: any, index: number) => {
 
                     return (
                         <Grid item key={index} xs={3}>
@@ -57,7 +57,7 @@ const GamesList = (): JSX.Element => {
 
             <h2 style={{ marginTop: 10, marginBottom: 10 }}>Juegos terminados</h2>
             <Grid container spacing={2}>
-                {juegosInactivos.length && juegosInactivos.map((game: any, index: number) => {
+                {juegosInactivos.map((game: any, index: number) => {
 
                     return (
                         <Grid item key={index} xs={3}>

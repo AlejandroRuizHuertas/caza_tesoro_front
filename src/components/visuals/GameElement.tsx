@@ -45,7 +45,5 @@ export const GameElement = (props: { game: any, tipo:string }): JSX.Element => {
         </Box>
     )
 };
-function rgb(arg0: number, arg1: number, arg2: number): import("csstype").Property.BackgroundColor | undefined {
-    throw new Error("Function not implemented.");
-}
+
 

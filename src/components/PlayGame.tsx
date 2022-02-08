@@ -8,18 +8,19 @@ import { Game } from "../interfaces/interfaceGame";
 import { Button, Grid } from "@mui/material";
 import { Treasure } from "../interfaces/interfaceTreasure";
 import { TreasureElement } from "./visuals/TreasureElement";
+import { EnumTipo } from "./EnumJuegos";
 
 export const PlayGame = (): JSX.Element => {
 
   const { gameId } = useParams();
 
-  const { getGameById } = useObtener();
+  const { getGameById, getUsername } = useObtener();
 
   const [game, setGame] = useState<Game>();
+  const [nombreUsuario, setNombreUsuario] = useState<string>("");
   const obtenerJuego = async () => {
-    const juego: any = await getGameById(gameId!);
+    const juego: Game = await getGameById(gameId!);
     setGame(juego);
-
   }
   useEffect(() => {
     obtenerJuego();
@@ -51,7 +52,7 @@ export const PlayGame = (): JSX.Element => {
         console.log(e);
       },
       locationfound: (location) => {
-       
+
       },
     })
     return null
@@ -73,9 +74,9 @@ export const PlayGame = (): JSX.Element => {
             [data.maxLat + bufferLat, data.maxLong + bufferLong],
           ]}
           scrollWheelZoom={true}
-          
+
         >
-          <MyComponent/>
+          <MyComponent />
           <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         </MapContainer>
@@ -84,9 +85,9 @@ export const PlayGame = (): JSX.Element => {
       <h2>Tesoros</h2>
       {game && game.treasures.map((tesoro: Treasure, index: number) => {
         return (
-         
-            <TreasureElement tesoro={tesoro} key={index} i={index} />
-         
+
+          <TreasureElement tesoro={tesoro} key={index} i={index} tipo={EnumTipo.PLAY} />
+
         )
       })}
     </>

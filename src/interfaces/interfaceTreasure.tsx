@@ -7,7 +7,7 @@ export interface Treasure{
     },
     found?: {
         proof:string,
-        userId: string
+        user_id: string
     }[]
 
 }

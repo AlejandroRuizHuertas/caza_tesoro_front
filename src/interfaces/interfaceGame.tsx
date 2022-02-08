@@ -5,7 +5,7 @@ export interface Game {
     active: boolean;
     name: string;
     description: string;
-    organizerId: string;
+    organizer_id: string;
     winner?: string;
     area: {
         centerCoordinates: number[],

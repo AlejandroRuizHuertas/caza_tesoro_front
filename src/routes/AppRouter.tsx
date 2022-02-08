@@ -9,12 +9,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { Route, Routes } from 'react-router';
 import { PrivateRoute } from './PrivateRoute';
 import { GameRouter } from './GameRouter';
+import { ReactNotifications } from 'react-notifications-component';
 
 function App() {
 
   return (
     <>
-
+      <ReactNotifications />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />

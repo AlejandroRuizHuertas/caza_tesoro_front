@@ -8,6 +8,7 @@ import { Game } from "../interfaces/interfaceGame";
 import { Button, Grid } from "@mui/material";
 import { Treasure } from "../interfaces/interfaceTreasure";
 import { TreasureElement } from "./visuals/TreasureElement";
+import { EnumTipo } from "./EnumJuegos";
 
 export const SuperviseGame = (): JSX.Element => {
 
@@ -85,7 +86,7 @@ export const SuperviseGame = (): JSX.Element => {
       {game && game.treasures.map((tesoro: Treasure, index: number) => {
         return (
          
-            <TreasureElement tesoro={tesoro} key={index} i={index} />
+            <TreasureElement tesoro={tesoro} key={index} i={index} tipo={EnumTipo.SUPERVISE}/>
          
         )
       })}

@@ -37,14 +37,16 @@ export const useObtener = () => {
         }
     }
 
-    async function sendPhoto(archivo: any) {
+    async function postPhoto(archivo: any) {
         try {
-            const formData = new FormData();
-            formData.append("image", archivo.foto);
-            const path = process.env.REACT_APP_IMGUR_URL + '/upload';
-            const res = await axios.post(path, formData, {
+            console.log("Foto",archivo);
+            const data = new FormData();
+            data.append("image", archivo);
+            const path = 'https://api.imgur.com/3/image';
+
+            const res = await axios.post(path, data, {
                 headers: {
-                    Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,                    
+                    Authorization: `Client-ID 16ca85463abc7a9`,                   
                 },
             });
             return res.data;
@@ -89,5 +91,5 @@ export const useObtener = () => {
 
 
 
-    return { getGames, getGameById, sendPhoto, getPhoto, getUsername }
+    return { getGames, getGameById,  postPhoto, getPhoto, getUsername }
 };
