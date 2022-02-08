@@ -37,9 +37,25 @@ export const useObtener = () => {
         }
     }
 
-    async function postPhoto(archivo: any) {
+    async function reiniciarJuego(id: string) {
         try {
-            console.log("Foto",archivo);
+            const servicio: string = '/game/reset';
+            const res = await axios.get(process.env.REACT_APP_BACKEND_PATH + servicio, {
+                timeout: 10000,
+                params: {
+                    userToken: getUsuarioSesion()?.userToken,
+                    id
+                }
+            });
+            return (res.data);
+        }
+        catch (error) {
+            console.log("Ha habido un error:", error)
+        }
+    }
+
+    async function postPhoto(archivo: any) {
+        try {            
             const data = new FormData();
             data.append("image", archivo);
             const path = 'https://api.imgur.com/3/image';
@@ -72,16 +88,16 @@ export const useObtener = () => {
         }
     }
 
-    async function getPhoto(id: string) {
-        console.log("Hola");
+    async function postTreasure(data: any, id:string) {
+  
         try {
-            const path = process.env.REACT_APP_IMGUR_URL + '/gallery/t/';
-            const res = await axios.get(path, {
-                headers: {
-                    Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,                    
-                },
-            });
-            console.log(res);
+            const path = process.env.REACT_APP_BACKEND_PATH + '/game/treasures/found';
+            const res = await axios.post(path, data,{
+                params: {
+                    userToken: getUsuarioSesion()?.userToken, 
+                    id          
+                },                
+            });            
             return res.data;
         }
         catch (error) {
@@ -91,5 +107,5 @@ export const useObtener = () => {
 
 
 
-    return { getGames, getGameById,  postPhoto, getPhoto, getUsername }
+    return { getGames, getGameById,  postPhoto, postTreasure, getUsername, reiniciarJuego }
 };

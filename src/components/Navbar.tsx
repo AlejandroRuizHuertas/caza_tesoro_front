@@ -54,9 +54,11 @@ export const Navbar = () => {
 
             <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 d-flex justify-content-end">
                 <ul className="navbar-nav ml-auto">
-
-                    <span className="nav-item nav-link text-info">
+                <span className="nav-item nav-link text-info">
                         Hola, {usuario.username}
+                    </span>
+                    <span className="nav-item nav-link text-info">
+                        Rol: {usuario.rol == "admin" ? "Administrador": "Usuario"}
                     </span>
 
                     <button

@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Create } from '../components/Create';
+import { Create } from '../components/CreateGame';
 import { PlayGame } from '../components/PlayGame';
 import { GamesList } from '../components/GamesList';
 import { MisJuegos } from '../components/MisJuegos';

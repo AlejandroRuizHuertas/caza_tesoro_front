@@ -2,28 +2,48 @@ import { height } from "@mui/system";
 import { LatLngExpression } from "leaflet";
 import React, { useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useObtener } from "../hooks/useObtener";
 import { Game } from "../interfaces/interfaceGame";
 import { Button, Grid } from "@mui/material";
 import { Treasure } from "../interfaces/interfaceTreasure";
 import { TreasureElement } from "./visuals/TreasureElement";
 import { EnumTipo } from "./EnumJuegos";
+import { NOTIFICATION_TYPE, Store } from "react-notifications-component";
 
 export const SuperviseGame = (): JSX.Element => {
 
   const { gameId } = useParams();
-
-  const { getGameById } = useObtener();
+  const navigate = useNavigate()
+  const { getGameById, getUsername, reiniciarJuego } = useObtener();
 
   const [game, setGame] = useState<Game>();
-  const obtenerJuego = async () => {
+  const [ganador, setGanador] = useState<string>();
+  const obtenerDatos = async () => {
     const juego: any = await getGameById(gameId!);
     setGame(juego);
+    setGanador(await getUsername(juego.winner));
 
   }
+  const handleClickReinicio = async () => {
+    const res: Game = await reiniciarJuego(gameId as string);
+
+    if (res) {
+      Store.addNotification({
+        message: "La partida se ha reiniciado correctamente",
+        type: "success",
+        insert: "top",
+        container: "top-right",
+        animationIn: ["animate__animated animate__fadeIn"], // `animate.css v4` classes
+        animationOut: ["animate__animated animate__fadeOut"] // `animate.css v4` classes
+      })
+      navigate('/supervise', {
+        replace: true
+      });
+    }
+  }
   useEffect(() => {
-    obtenerJuego();
+    obtenerDatos();
   }, []);
 
   let data = {
@@ -41,10 +61,6 @@ export const SuperviseGame = (): JSX.Element => {
   var bufferLong = distanceLong * 0.05;
   const zoom = 4;
 
-  const cities = [
-    { position: [22.583261, 88.412796], text: "A" },
-    { position: [22.58289, 88.41366], text: "B" }
-  ];
 
   function MyComponent() {
     const map = useMapEvents({
@@ -52,7 +68,7 @@ export const SuperviseGame = (): JSX.Element => {
         console.log(e);
       },
       locationfound: (location) => {
-       
+
       },
     })
     return null
@@ -63,6 +79,7 @@ export const SuperviseGame = (): JSX.Element => {
 
 
       <h1>Bienvenido a: {game && game.name}</h1>
+      {ganador && <h2>Ganador: {ganador}</h2>}
       <div>
 
         <MapContainer
@@ -74,9 +91,9 @@ export const SuperviseGame = (): JSX.Element => {
             [data.maxLat + bufferLat, data.maxLong + bufferLong],
           ]}
           scrollWheelZoom={true}
-          
+
         >
-          <MyComponent/>
+          <MyComponent />
           <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         </MapContainer>
@@ -85,11 +102,12 @@ export const SuperviseGame = (): JSX.Element => {
       <h2>Tesoros</h2>
       {game && game.treasures.map((tesoro: Treasure, index: number) => {
         return (
-         
-            <TreasureElement tesoro={tesoro} key={index} i={index} tipo={EnumTipo.SUPERVISE}/>
-         
+
+          <TreasureElement tesoro={tesoro} key={index} i={index} tipo={EnumTipo.SUPERVISE} />
+
         )
       })}
+      <Button variant="contained" color="error" style={{ marginTop: 5 }} onClick={handleClickReinicio}>Reiniciar juego</Button>
     </>
   );
 };
