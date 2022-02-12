@@ -1,10 +1,13 @@
 import { height } from "@mui/system";
 import { LatLngExpression } from "leaflet";
-
+import L from "leaflet";
 import React from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import Login from "./Login";
 import TextField from '@mui/material/TextField';
+import "leaflet-draw/dist/leaflet.draw.css";
+
+var leafletDraw = require('leaflet-draw');
 
 export const Create = (): JSX.Element => {
 
@@ -23,16 +26,50 @@ export const Create = (): JSX.Element => {
   var bufferLong = distanceLong * 0.05;
   const zoom = 4;
 
-
   function MyComponent() {
     const map = useMapEvents({
       click: (e) => {
         console.log(e);
       },
       locationfound: (location) => {
-       
+
       },
+
     })
+
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+    var drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        },
+        draw: {
+          circle: false,
+          circlemarker: false,
+          polygon: false,
+          polyline: false,
+          marker: false,
+        }
+    });
+
+    var playableArea,p1,p2,p3,p4;
+
+    map.addControl(drawControl);
+    map.on(L.Draw.Event.CREATED, function(e){
+      map.addLayer(e.layer);
+      p1 = "["+e.layer.getLatLngs()[0][0]["lat"]+","+e.layer.getLatLngs()[0][0]["lng"]+"]"
+      p2 = "["+e.layer.getLatLngs()[0][1]["lat"]+","+e.layer.getLatLngs()[0][1]["lng"]+"]"
+      p3 = "["+e.layer.getLatLngs()[0][2]["lat"]+","+e.layer.getLatLngs()[0][2]["lng"]+"]"
+      p4 = "["+e.layer.getLatLngs()[0][3]["lat"]+","+e.layer.getLatLngs()[0][3]["lng"]+"]"
+      playableArea = "["+p1+","+p2+","+p3+","+p4+"]"
+      console.log(playableArea);
+    });
+
+    //var coords = "[[33.49674296343329, 93.99902343750001],[38.67800554026613, 93.99902343750001],[38.67800554026613, 98.30566406250001],[33.49674296343329, 98.30566406250001]]"
+    //var JSONplayableArea = JSON.parse(coords);
+    //var polygon = L.polygon(JSONplayableArea, {color: 'red'});
+    //polygon.addTo(map);
+
     return null
   }
 
