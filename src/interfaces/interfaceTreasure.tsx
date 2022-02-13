@@ -1,7 +1,7 @@
 
 export interface Treasure{
     location: number[],
-    hint: {
+    hint?: {
         imageUrl: string,
         text:string
     },

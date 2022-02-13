@@ -8,8 +8,10 @@ export interface Game {
     organizer_id: string;
     winner?: string;
     area: {
-        centerCoordinates: number[],
-        dimensions: number[]
+        coordinates: {
+            latitude: number;
+            longitude: number;
+        }[]
     },
     treasures: Treasure[]
 }

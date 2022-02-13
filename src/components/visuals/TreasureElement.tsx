@@ -8,16 +8,15 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { Treasure } from "../../interfaces/interfaceTreasure";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Paper from '@mui/material/Paper';
 import { useEffect, useMemo, useState } from "react";
 import { useObtener } from "../../hooks/useObtener";
 import 'react-notifications-component/dist/theme.css'
 import { NOTIFICATION_TYPE, Store } from "react-notifications-component";
 import List from '@mui/material/List';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+
 import { EnumTipo } from "../EnumJuegos";
 import { getUsuarioSesion } from "../../interfaces/interfaceUser";
+import { WinnerDialog } from "./WinnerDialog";
 
 export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: string }): JSX.Element => {
     let { tesoro, i, tipo } = props;
@@ -27,7 +26,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
     const [fotoSubida, setFotoSubida] = useState<any>();
     const [usuariosFoto, setUsuariosFoto] = useState<string[]>([]);
     const { postPhoto, getUsername, postTreasure } = useObtener();
-
+    const [open, setOpen] = useState<boolean>(false)
 
     const obtenerUsuariosEncontrados = async () => {
         if (tesoro.found) {
@@ -44,7 +43,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
     }
     const handleUpload = async () => {
         //Subir foto  
-        
+
         let mensaje: string = "";
         let tipo: NOTIFICATION_TYPE = "danger";
         if (!fotoSubida) {
@@ -55,7 +54,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
             const respuesta: any = await postPhoto(fotoSubida);
             const resSubirPrueba: any = await postTreasure({ index: i, proof: respuesta.link }, gameId!);
             // const resSubirPrueba: any = await postTreasure({ index: i, proof: 'https://i.imgur.com/R8p6ozx.jpg' }, gameId!);
-         
+
             //Si la prueba no me devuelve un ganador, es que el juego sigue
             if (resSubirPrueba.winner == "") {
                 mensaje = "La prueba ha sido subida. ¡A por más tesoros!";
@@ -63,10 +62,11 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
             } else {
                 const idUsuario = getUsuarioSesion()!.username;
                 //Si el usuario es el ganador
-     
+
                 if (idUsuario == resSubirPrueba.winner) {
                     mensaje = "¡Enhorabuena! ¡Eres el ganador!";
                     tipo = "success";
+                    setOpen(true)
                 }
                 else {
                     mensaje = "El juego ya ha terminado, y no has resultado ganador. ¡Suerte en la próxima!";
@@ -107,7 +107,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
                             <Grid item container direction={'column'}>
                                 <Grid item>
                                     <Typography variant="h6">
-                                        Pista: {tesoro.hint.text}
+                                        Pista: { tesoro.hint!.text}
                                     </Typography>
 
                                 </Grid>
@@ -121,7 +121,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
                                         <Grid item container direction={'row'} >
 
                                             <Button variant="outlined" component="label" >
-                                                Cargar tesoro
+                                                Subir prueba
                                                 <input type={'file'} onChange={onPhotoSelected} accept='.png,.jpg,.jpeg' hidden />
                                             </Button>
 
@@ -129,7 +129,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
                                         </Grid>
                                         <Grid item marginTop={2}>
 
-                                            {/* TODO Subir pista */}
+
                                             <Button variant="contained" onClick={handleUpload}>Enviar</Button>
                                         </Grid>
                                     </Grid>}
@@ -147,6 +147,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+            <WinnerDialog open={open} handleClose={() => setOpen(false)} />
         </Box>
     )
 };

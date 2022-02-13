@@ -30,6 +30,7 @@ export const useObtener = () => {
                     id
                 }
             });
+            console.log("Juego",res.data)
             return (res.data);
         }
         catch (error) {
@@ -105,7 +106,22 @@ export const useObtener = () => {
         }
     }
 
+    async function postGame(data: any) {
+  
+        try {
+            const path = process.env.REACT_APP_BACKEND_PATH + '/game';
+            const res = await axios.post(path, data,{
+                params: {
+                    userToken: getUsuarioSesion()?.userToken,                           
+                },                
+            });            
+            return res.data;
+        }
+        catch (error) {
+            console.log("Ha habido un error:", error)
+        }
+    }
 
 
-    return { getGames, getGameById,  postPhoto, postTreasure, getUsername, reiniciarJuego }
+    return { getGames, getGameById,  postPhoto, postTreasure, getUsername, reiniciarJuego, postGame }
 };

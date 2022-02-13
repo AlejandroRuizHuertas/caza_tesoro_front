@@ -17,8 +17,7 @@ const GamesList = (): JSX.Element => {
     const [juegosInactivos, setJuegosInactivos] = useState<Game[]>([]);
 
 
-    const obtenerJuegos = async () => 
-    {
+    const obtenerJuegos = async () => {
         const juegos: any = await getGames();
         //Establezco como activos los juegos activos
         setJuegosActivos(juegos.filter((juego: Game) => juego.active));
@@ -38,8 +37,9 @@ const GamesList = (): JSX.Element => {
     }, []);
 
     return (
-        <div>
 
+        <Grid>
+            
 
             <h2 style={{ marginTop: 10, marginBottom: 10 }}>Juegos activos</h2>
 
@@ -48,7 +48,7 @@ const GamesList = (): JSX.Element => {
 
                     return (
                         <Grid item key={index} xs={3}>
-                            <GameElement game={game} tipo={EnumTipo.PLAY}/>
+                            <GameElement game={game} tipo={EnumTipo.PLAY} />
                         </Grid>
                     )
 
@@ -61,7 +61,7 @@ const GamesList = (): JSX.Element => {
 
                     return (
                         <Grid item key={index} xs={3}>
-                            <GameElement game={game} tipo={EnumTipo.PLAY}/>
+                            <GameElement game={game} tipo={EnumTipo.PLAY} />
                         </Grid>
                     )
 
@@ -69,7 +69,7 @@ const GamesList = (): JSX.Element => {
             </Grid>
 
 
-        </div>
+        </Grid>
     );
 };
 

@@ -1,7 +1,6 @@
 import { height } from "@mui/system";
-import { LatLngExpression } from "leaflet";
 import React, { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { FeatureGroup, MapContainer, Marker, Popup, TileLayer, useMapEvents, Rectangle } from "react-leaflet";
 import { useNavigate, useParams } from "react-router";
 import { useObtener } from "../hooks/useObtener";
 import { Game } from "../interfaces/interfaceGame";
@@ -10,6 +9,9 @@ import { Treasure } from "../interfaces/interfaceTreasure";
 import { TreasureElement } from "./visuals/TreasureElement";
 import { EnumTipo } from "./EnumJuegos";
 import { NOTIFICATION_TYPE, Store } from "react-notifications-component";
+import { LatLngExpression } from "leaflet";
+
+const L = require("leaflet");
 
 export const SuperviseGame = (): JSX.Element => {
 
@@ -19,9 +21,20 @@ export const SuperviseGame = (): JSX.Element => {
 
   const [game, setGame] = useState<Game>();
   const [ganador, setGanador] = useState<string>();
+
+  const myIcon = L.icon({
+    shadowUrl: null,
+      iconAnchor: new L.Point(24, 24),
+      iconSize: new L.Point(48, 48),
+      iconUrl: 'https://cdn.pixabay.com/photo/2014/12/21/23/27/treasure-chest-575386_960_720.png'
+});
+
+  
+
   const obtenerDatos = async () => {
     const juego: any = await getGameById(gameId!);
     setGame(juego);
+    setcoords([[juego.area.coordinates[0].latitude,juego.area.coordinates[0].longitude],[juego.area.coordinates[3].latitude,juego.area.coordinates[3].longitude]])
     setGanador(await getUsername(juego.winner));
 
   }
@@ -53,26 +66,27 @@ export const SuperviseGame = (): JSX.Element => {
     maxLong: 139.6917
   };
 
-  const centerLat = (data.minLat + data.maxLat) / 2;
+  const centerLat = 36.7196 ;
   var distanceLat = data.maxLat - data.minLat;
   var bufferLat = distanceLat * 0.05;
-  const centerLong = (data.minLong + data.maxLong) / 2;
+  const centerLong = -4.42002;
   var distanceLong = data.maxLong - data.minLong;
   var bufferLong = distanceLong * 0.05;
-  const zoom = 4;
+  const zoom = 8;
 
+  const [coords, setcoords] = useState<number[][]>([[0,0],[0,0]])
 
-  function MyComponent() {
-    const map = useMapEvents({
-      click: (e) => {
-        console.log(e);
-      },
-      locationfound: (location) => {
-
-      },
-    })
-    return null
-  }
+  const MyComponent = () => (
+    <FeatureGroup>
+      {coords && 
+      //@ts-ignore
+      <Rectangle bounds={coords} pathOptions={{ color: 'yellow' }} />}
+      
+      {game?.treasures.map( tesoro => (
+      //@ts-ignore
+      <Marker icon={myIcon} position={tesoro.location as LatLngExpression} />))}
+    </FeatureGroup>
+  );
 
   return (
     <>

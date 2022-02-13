@@ -1,155 +1,236 @@
-import { height } from "@mui/system";
 import { circleMarker, LatLngExpression, } from "leaflet";
 import L from "leaflet";
-import React from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import Login from "./Login";
-import TextField from '@mui/material/TextField';
+import React, { useReducer } from "react";
+import { FeatureGroup, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { NOTIFICATION_TYPE, Store } from "react-notifications-component";
 import "leaflet-draw/dist/leaflet.draw.css";
+import { useState } from "react";
+import { Button, FormControl, Grid, Input, InputLabel } from "@mui/material";
+import { Treasure } from "../interfaces/interfaceTreasure";
+import { TreasureCreate } from "./visuals/TreasureCreate";
+import { useNavigate } from "react-router";
+import { useObtener } from "../hooks/useObtener";
 
 var leafletDraw = require('leaflet-draw');
 
+
 export const Create = (): JSX.Element => {
 
-  let data = {
-    minLat: -6.1751,
-    maxLat: 55.7558,
-    minLong: 37.6173,
-    maxLong: 139.6917
+  const [nombre, setNombre] = useState<string>("")
+  const [descripcion, setDescripcion] = useState<string>("");
+
+  const handleNombreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNombre(event.target.value);
   };
 
-  const centerLat = (data.minLat + data.maxLat) / 2;
-  var distanceLat = data.maxLat - data.minLat;
-  var bufferLat = distanceLat * 0.05;
-  const centerLong = (data.minLong + data.maxLong) / 2;
-  var distanceLong = data.maxLong - data.minLong;
-  var bufferLong = distanceLong * 0.05;
-  const zoom = 4;
+  const handleDescripcionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDescripcion(event.target.value);
+  };
+
+  const [playArea, setPlayArea] = useState<string>("");
+
+
+  function reducer(state, action) {
+    console.log("Action", action.type)
+    switch (action.type) {
+      case 'add':
+        return [...state, action.payload];
+      case 'update':
+
+        state[action.payload.i] = action.payload.tesoro
+        return state
+
+    }
+  }
+  const navigate = useNavigate()
+  const initialState = [];
+  const [tesoros, dispatch] = useReducer(reducer, initialState);
+
+  const centerLat = 36.7049697339655;
+  const centerLong = -4.446651805452502;
+  const zoom = 16;
 
   function isMarkerInsidePolygon(marker, poly) {
     var inside = false;
     var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-    for (var ii=0;ii<poly.getLatLngs().length;ii++){
-        var polyPoints = poly.getLatLngs()[ii];
-        for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
-            var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
-            var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
+    for (var ii = 0; ii < poly.getLatLngs().length; ii++) {
+      var polyPoints = poly.getLatLngs()[ii];
+      for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+        var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+        var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
 
-            var intersect = ((yi > y) != (yj > y))
-                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
+        var intersect = ((yi > y) != (yj > y))
+          && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+      }
     }
 
     return inside;
-  };  
+  };
 
-  function MyComponent() {
-    const map = useMapEvents({
-      click: (e) => {
-        console.log(e);
-      },
-      locationfound: (location) => {
+  var customMarker = L.Icon.extend({
+    options: {
+      shadowUrl: null,
+      iconAnchor: new L.Point(24, 24),
+      iconSize: new L.Point(48, 48),
+      iconUrl: 'https://cdn.pixabay.com/photo/2014/12/21/23/27/treasure-chest-575386_960_720.png'
+    }
+  });
+  const { postGame } = useObtener();
+  async function handleCreateGame() {
+    let mensaje: string = "";
+    let tipo: NOTIFICATION_TYPE = "danger";
 
-      },
+    if (tesoros.length == 0 || tesoros[0].hint.text == "" || playArea == "" || nombre == "" || descripcion == "") {
+      mensaje = "Debes añadir nombre, área y tesoros."
+    }
+    else {
+      let areaJuego = JSON.parse(playArea);
+      const jueguico = {
+        name: nombre,
+        description: descripcion,
+        area: { coordinates: areaJuego.map((coords) => { return ({ latitude: coords[0], longitude: coords[1] }) }) },
+        active: true,
+        treasures: tesoros,
+        winner: ""
+      }
+      console.log(jueguico)
+      await postGame(jueguico)
+      mensaje = "Juego creado";
+      tipo = "success";
+      navigate('/games', {
+        replace: true
+      });
+    }
 
+
+    Store.addNotification({
+      message: mensaje,
+      type: tipo,
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated animate__fadeIn"], // `animate.css v4` classes
+      animationOut: ["animate__animated animate__fadeOut"] // `animate.css v4` classes
     })
 
-    var customMarker= L.Icon.extend({
+  }
+  function MyComponent() {
+    const map = useMapEvents({})
+
+    var customMarker = L.Icon.extend({
       options: {
-          shadowUrl: null,
-          iconAnchor: new L.Point(24, 24),
-          iconSize: new L.Point(48, 48),
-          iconUrl: 'https://cdn.pixabay.com/photo/2014/12/21/23/27/treasure-chest-575386_960_720.png'
+        shadowUrl: null,
+        iconAnchor: new L.Point(24, 24),
+        iconSize: new L.Point(48, 48),
+        iconUrl: 'https://cdn.pixabay.com/photo/2014/12/21/23/27/treasure-chest-575386_960_720.png'
       }
-  });
+    });
 
     var drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
+    //@ts-ignore
     var drawControl = new L.Control.Draw({
-        edit: {
-            featureGroup: drawnItems
+      edit: {
+        featureGroup: drawnItems
+      },
+      draw: {
+        circle: false,
+        circlemarker: false,
+        polygon: false,
+        polyline: false,
+        marker: {
+          icon: new customMarker()
         },
-        draw: {
-          circle: false,
-          circlemarker: false,
-          polygon: false,
-          polyline: false,
-          marker: {
-            icon: new customMarker()
-          },
-        },
-        
+      },
+
     });
 
-    var playableArea,p1,p2,p3,p4;
+    var playableArea, p1, p2, p3, p4;
     var areaLayer;
 
+
     map.addControl(drawControl);
-    map.on(L.Draw.Event.CREATED, function(e){
+    //@ts-ignore
+    map.on(L.Draw.Event.CREATED, function (e) {
       drawnItems.addLayer(e.layer);
-      if (e.layer instanceof L.Rectangle){
-        if(!playableArea){
-          p1 = "["+e.layer.getLatLngs()[0][0]["lat"]+","+e.layer.getLatLngs()[0][0]["lng"]+"]";
-          p2 = "["+e.layer.getLatLngs()[0][1]["lat"]+","+e.layer.getLatLngs()[0][1]["lng"]+"]";
-          p3 = "["+e.layer.getLatLngs()[0][2]["lat"]+","+e.layer.getLatLngs()[0][2]["lng"]+"]";
-          p4 = "["+e.layer.getLatLngs()[0][3]["lat"]+","+e.layer.getLatLngs()[0][3]["lng"]+"]";
-          playableArea = "["+p1+","+p2+","+p3+","+p4+"]";
+      if (e.layer instanceof L.Rectangle) {
+        if (!playableArea) {
+          p1 = "[" + e.layer.getLatLngs()[0][0]["lat"] + "," + e.layer.getLatLngs()[0][0]["lng"] + "]";
+          p2 = "[" + e.layer.getLatLngs()[0][1]["lat"] + "," + e.layer.getLatLngs()[0][1]["lng"] + "]";
+          p3 = "[" + e.layer.getLatLngs()[0][2]["lat"] + "," + e.layer.getLatLngs()[0][2]["lng"] + "]";
+          p4 = "[" + e.layer.getLatLngs()[0][3]["lat"] + "," + e.layer.getLatLngs()[0][3]["lng"] + "]";
+          playableArea = "[" + p1 + "," + p2 + "," + p3 + "," + p4 + "]";
           areaLayer = e.layer;
-        }else{
+          setPlayArea(playableArea);
+        } else {
           e.layer.remove();
         }
       }
-      
-      if (e.layer instanceof L.Marker){
-        if(playableArea){
-          if(isMarkerInsidePolygon(e.layer,areaLayer)){
-            console.log("YAI");
-          }else{
+
+      if (e.layer instanceof L.Marker) {
+        if (playableArea) {
+          if (isMarkerInsidePolygon(e.layer, areaLayer)) {
+            dispatch({ type: 'add', payload: { location: [e.layer.getLatLng().lat, e.layer.getLatLng().lng] } })
+
+          } else {
             e.layer.remove();
           }
-        }else{
+        } else {
           e.layer.remove();
         }
       }
-    
-    });
 
-    map.on(L.Draw.Event.DELETED, function(e){
+    });
+    //@ts-ignore
+    map.on(L.Draw.Event.DELETED, function (e) {
       playableArea = null;
       areaLayer = null;
     });
-
-    //var coords = "[[33.49674296343329, 93.99902343750001],[38.67800554026613, 93.99902343750001],[38.67800554026613, 98.30566406250001],[33.49674296343329, 98.30566406250001]]"
-    //var JSONplayableArea = JSON.parse(coords);
-    //var polygon = L.polygon(JSONplayableArea, {color: 'red'});
-    //polygon.addTo(map);
 
     return null
   }
 
   return (
-  <div>
+    <div>
 
       <h1>Crear juego</h1>
-      <TextField variant="outlined" label="Nombre"/>
-      <br/>
-      <TextField variant="outlined" label="Descripción"/>
-      <MapContainer
+      <Grid container xs={12} display="flex">
+
+        <MapContainer
           style={{ height: "480px", width: "100%" }}
           zoom={zoom}
           center={[centerLat, centerLong]}
-          bounds={[
-            [data.minLat - bufferLat, data.minLong - bufferLong],
-            [data.maxLat + bufferLat, data.maxLong + bufferLong],
-          ]}
+
           scrollWheelZoom={true}
-          
+
         >
-          <MyComponent/>
+          <MyComponent />
           <TileLayer url="http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         </MapContainer>
-  </div>
+
+        <Grid item container xs={12} padding={3} display="flex">
+          <FormControl fullWidth  >
+            <InputLabel htmlFor="component-simple">Nombre</InputLabel>
+            <Input id="component-simple" value={nombre} onChange={handleNombreChange} />
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} padding={3}>
+
+          <FormControl fullWidth >
+            <InputLabel htmlFor="component-simple">Descripción</InputLabel>
+            <Input id="component-simple" value={descripcion} onChange={handleDescripcionChange} />
+          </FormControl>
+        </Grid>
+      </Grid>
+      <br />
+
+
+      <h3>Tesoros</h3>
+      {tesoros && tesoros.map((t, index) => {
+        return <TreasureCreate tesoro={t} i={tesoros.indexOf(t)} dispatchTesoro={dispatch} />
+      })}
+      <Button variant="outlined" onClick={handleCreateGame}>Crear</Button>
+    </div>
   );
 };

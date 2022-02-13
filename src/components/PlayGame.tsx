@@ -1,7 +1,7 @@
 import { height } from "@mui/system";
 import { LatLngExpression } from "leaflet";
 import React, { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { FeatureGroup, MapContainer, Marker, Popup, TileLayer, useMapEvents, Rectangle } from "react-leaflet";
 import { useParams } from "react-router";
 import { useObtener } from "../hooks/useObtener";
 import { Game } from "../interfaces/interfaceGame";
@@ -10,16 +10,19 @@ import { Treasure } from "../interfaces/interfaceTreasure";
 import { TreasureElement } from "./visuals/TreasureElement";
 import { EnumTipo } from "./EnumJuegos";
 
+
 export const PlayGame = (): JSX.Element => {
 
   const { gameId } = useParams();
 
   const { getGameById, getUsername } = useObtener();
 
+  const [coords, setcoords] = useState<number[][]>([[0,0],[0,0]])
+
   const [game, setGame] = useState<Game>();
-  const [nombreUsuario, setNombreUsuario] = useState<string>("");
   const obtenerJuego = async () => {
     const juego: Game = await getGameById(gameId!);
+    setcoords([[juego.area.coordinates[0].latitude,juego.area.coordinates[0].longitude],[juego.area.coordinates[3].latitude,juego.area.coordinates[3].longitude]])
     setGame(juego);
   }
   useEffect(() => {
@@ -33,30 +36,23 @@ export const PlayGame = (): JSX.Element => {
     maxLong: 139.6917
   };
 
-  const centerLat = (data.minLat + data.maxLat) / 2;
+
+
+  const centerLat = 36.7196;
   var distanceLat = data.maxLat - data.minLat;
   var bufferLat = distanceLat * 0.05;
-  const centerLong = (data.minLong + data.maxLong) / 2;
+  const centerLong = -4.42002;
   var distanceLong = data.maxLong - data.minLong;
   var bufferLong = distanceLong * 0.05;
-  const zoom = 4;
+  const zoom = 8;
 
-  const cities = [
-    { position: [22.583261, 88.412796], text: "A" },
-    { position: [22.58289, 88.41366], text: "B" }
-  ];
-
-  function MyComponent() {
-    const map = useMapEvents({
-      click: (e) => {
-        console.log(e);
-      },
-      locationfound: (location) => {
-
-      },
-    })
-    return null
-  }
+  const MyComponent = () => (
+    <FeatureGroup>
+      {coords && 
+      //@ts-ignore
+      <Rectangle bounds={coords} pathOptions={{ color: 'yellow' }} />}
+    </FeatureGroup>
+  );
 
   return (
     <>
