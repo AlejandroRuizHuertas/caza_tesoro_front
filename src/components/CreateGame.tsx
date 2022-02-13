@@ -10,7 +10,7 @@ import { Treasure } from "../interfaces/interfaceTreasure";
 import { TreasureCreate } from "./visuals/TreasureCreate";
 import { useNavigate } from "react-router";
 import { useObtener } from "../hooks/useObtener";
-
+var leafletDraw = require('leaflet-draw');
 
 
 export const Create = (): JSX.Element => {
