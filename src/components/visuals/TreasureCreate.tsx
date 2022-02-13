@@ -45,7 +45,7 @@ export const TreasureCreate = (props: { tesoro: Treasure, i: number, dispatchTes
         }
         else {
             const respuesta: any = await postPhoto(fotoSubida);
-            const url = respuesta ? respuesta.link : "https://1.bp.blogspot.com/-suKiyXUvLUo/UI_zlB8YHDI/AAAAAAAABN4/mhaa83o-Oeg/s320/interrogation.png"
+            const url = respuesta ? respuesta.data.link : "https://1.bp.blogspot.com/-suKiyXUvLUo/UI_zlB8YHDI/AAAAAAAABN4/mhaa83o-Oeg/s320/interrogation.png"
             dispatchTesoro({type: 'update', payload: {i, tesoro: {
                 location: props.tesoro.location,
                 hint: {

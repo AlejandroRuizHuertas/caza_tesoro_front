@@ -52,8 +52,8 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
         }
         else {
             const respuesta: any = await postPhoto(fotoSubida);
-            console.log("Respuesta",respuesta)
-            const resSubirPrueba: any = await postTreasure({ index: i, proof: respuesta.link }, gameId!);
+            
+            const resSubirPrueba: any = await postTreasure({ index: i, proof: respuesta.data.link }, gameId!);
             // const resSubirPrueba: any = await postTreasure({ index: i, proof: 'https://i.imgur.com/R8p6ozx.jpg' }, gameId!);
 
             //Si la prueba no me devuelve un ganador, es que el juego sigue
