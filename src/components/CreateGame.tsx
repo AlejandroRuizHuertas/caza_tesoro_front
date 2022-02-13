@@ -11,7 +11,6 @@ import { TreasureCreate } from "./visuals/TreasureCreate";
 import { useNavigate } from "react-router";
 import { useObtener } from "../hooks/useObtener";
 
-var leafletDraw = require('leaflet-draw');
 
 
 export const Create = (): JSX.Element => {
@@ -31,12 +30,10 @@ export const Create = (): JSX.Element => {
 
 
   function reducer(state, action) {
-    console.log("Action", action.type)
     switch (action.type) {
       case 'add':
         return [...state, action.payload];
       case 'update':
-
         state[action.payload.i] = action.payload.tesoro
         return state
 
@@ -76,12 +73,18 @@ export const Create = (): JSX.Element => {
       iconUrl: 'https://cdn.pixabay.com/photo/2014/12/21/23/27/treasure-chest-575386_960_720.png'
     }
   });
+
+  const estanTesorosCorrectos = (): boolean => {
+    //Busca si algún tesoro no tiene url o texto. Si lo encuentra, es que los tesoros no están correctos
+    return tesoros.find(t => t.hint.image_url == "" || t.hint.text == "") ? false : true;
+  }
   const { postGame } = useObtener();
   async function handleCreateGame() {
     let mensaje: string = "";
     let tipo: NOTIFICATION_TYPE = "danger";
 
-    if (tesoros.length == 0 || tesoros[0].hint.text == "" || playArea == "" || nombre == "" || descripcion == "") {
+    
+    if (tesoros.length == 0 || !estanTesorosCorrectos() || playArea == "" || nombre == "" || descripcion == "") {
       mensaje = "Debes añadir nombre, área y tesoros."
     }
     else {
@@ -94,7 +97,6 @@ export const Create = (): JSX.Element => {
         treasures: tesoros,
         winner: ""
       }
-      console.log(jueguico)
       await postGame(jueguico)
       mensaje = "Juego creado";
       tipo = "success";
@@ -170,7 +172,14 @@ export const Create = (): JSX.Element => {
       if (e.layer instanceof L.Marker) {
         if (playableArea) {
           if (isMarkerInsidePolygon(e.layer, areaLayer)) {
-            dispatch({ type: 'add', payload: { location: [e.layer.getLatLng().lat, e.layer.getLatLng().lng] } })
+            dispatch({
+              type: 'add', payload: {
+                found: [], hint: {
+                  image_url: "",
+                  text: ""
+                }, location: [e.layer.getLatLng().lat, e.layer.getLatLng().lng]
+              }
+            })
 
           } else {
             e.layer.remove();

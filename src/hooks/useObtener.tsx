@@ -29,8 +29,7 @@ export const useObtener = () => {
                     userToken: getUsuarioSesion()?.userToken,
                     id
                 }
-            });
-            console.log("Juego",res.data)
+            });            
             return (res.data);
         }
         catch (error) {
