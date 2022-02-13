@@ -22,7 +22,8 @@ export const PlayGame = (): JSX.Element => {
   const [game, setGame] = useState<Game>();
   const obtenerJuego = async () => {
     const juego: Game = await getGameById(gameId!);
-    setcoords([[juego.area.coordinates[0].latitude,juego.area.coordinates[0].longitude],[juego.area.coordinates[3].latitude,juego.area.coordinates[3].longitude]])
+  
+    setcoords([[juego.area.coordinates[0].latitude,juego.area.coordinates[0].longitude],[juego.area.coordinates[2].latitude,juego.area.coordinates[2].longitude]])
     setGame(juego);
   }
   useEffect(() => {

@@ -3,7 +3,7 @@ import L from "leaflet";
 import React, { useReducer } from "react";
 import { FeatureGroup, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import { NOTIFICATION_TYPE, Store } from "react-notifications-component";
-import "leaflet-draw/dist/leaflet.draw.css";
+
 import { useState } from "react";
 import { Button, FormControl, Grid, Input, InputLabel } from "@mui/material";
 import { Treasure } from "../interfaces/interfaceTreasure";

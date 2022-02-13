@@ -34,7 +34,7 @@ export const SuperviseGame = (): JSX.Element => {
   const obtenerDatos = async () => {
     const juego: any = await getGameById(gameId!);
     setGame(juego);
-    setcoords([[juego.area.coordinates[0].latitude,juego.area.coordinates[0].longitude],[juego.area.coordinates[3].latitude,juego.area.coordinates[3].longitude]])
+    setcoords([[juego.area.coordinates[0].latitude,juego.area.coordinates[0].longitude],[juego.area.coordinates[2].latitude,juego.area.coordinates[2].longitude]])
     setGanador(await getUsername(juego.winner));
 
   }

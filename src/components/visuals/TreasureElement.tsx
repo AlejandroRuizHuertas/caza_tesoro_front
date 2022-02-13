@@ -113,7 +113,7 @@ export const TreasureElement = (props: { tesoro: Treasure, i: number, tipo: stri
                                 </Grid>
                                 <Grid item >
 
-                                    <img src={"https://i.imgur.com/LncoF4L.jpeg"} style={{ maxWidth: '10em', maxHeight: '10em', outline: '3px solid grey', borderRadius: '5px' }} />
+                                    <img src={tesoro.hint!.image_url} style={{ maxWidth: '10em', maxHeight: '10em', outline: '3px solid grey', borderRadius: '5px' }} />
 
                                 </Grid>
                                 {tipo == EnumTipo.PLAY &&
