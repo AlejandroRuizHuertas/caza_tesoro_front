@@ -23,7 +23,7 @@ function Login() {
             <GoogleLogin
                 clientId={`${process.env.REACT_APP_CLIENT_ID}`}
                 buttonText="Iniciar sesión con Google"
-                onSuccess={(data) => handleLogin(data)}                
+                onSuccess={handleLogin}
                 cookiePolicy={'single_host_origin'}
             />
 

@@ -4,7 +4,7 @@ export function useLogin() {
     //Función que hace el login y guarda los datos en el sessionStorage
     const authenticate = async (googleData: any) => {
         try {            
-            console.log(googleData)
+            
             const servicio: string = '/user';
             const res = await axios.get(process.env.REACT_APP_BACKEND_PATH + servicio, {
                 method: "GET",
